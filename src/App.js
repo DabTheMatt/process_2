@@ -39,13 +39,14 @@ class App extends React.Component {
         id: newNote.id,
         ...note,
       };
-
+      console.log("newNote id", newNote.id);
       this.setState({
         notes: [...this.state.notes, noteOBJ],
       });
     } catch (error) {
       console.error("error creating note", error);
     }
+    console.log("newnotes", this.state.notes);
   };
 
   delNote = (id) => {
@@ -54,6 +55,20 @@ class App extends React.Component {
       notes: [...tempNotes],
     });
   };
+
+  updateNotes = async (noteId, newTitle) => {
+    console.log(noteId, newTitle);
+    try {
+      const notes = await notesRef.doc(noteId)
+      notes.update({
+        "note.title": newTitle
+      })
+
+
+    } catch (error) {
+      console.log("Error updating title", error);
+    }
+  }
 
   render() {
     return (
@@ -77,6 +92,7 @@ class App extends React.Component {
               notes={this.state.notes}
               delNote={this.delNote}
               getNotes={this.getNotes}
+              updateNotes={this.updateNotes}
               />
             )}
           />

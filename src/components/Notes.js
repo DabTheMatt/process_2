@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { notesRef } from '../firebase';
+import NoteModel from "../components/NoteModel"
 
 class Notes extends Component {
     state = {
         userNotes: [],
-        notes: []
+        notes: [],
+        
     }
 
     componentDidMount = () => {
@@ -38,7 +40,7 @@ class Notes extends Component {
     }
 
     deleteNote = async e => {
-        console.log("e", e);
+        
         try {
             
             const noteId = e
@@ -49,8 +51,19 @@ class Notes extends Component {
         }
     }
 
+    updateTitle = (e) => {
+        
+        const noteId = e.target.id
+        const newTitle = e.target.value
+        if(noteId && newTitle) {
+            this.props.updateNotes(noteId, newTitle)
+        }
+
+    }
+
     render() {
         return (
+            <React.Fragment>
             <div>
                 <span>UserId: {this.props.match.params.userId}</span>
                 <div className="notesWrapper">
@@ -58,7 +71,14 @@ class Notes extends Component {
                     return(
                         <div key={el.id} className="note">
                             <div>{el.id}</div>
-                            <div>{el.title}</div>
+                            <input
+                            type="text"
+                            name="noteTitle"
+                            onChange={this.updateTitle}
+                            defaultValue={el.title}
+                            id={el.id}
+                            
+                            />
                             <div>{el.body}</div>
                             <button 
                             /*onClick={()=>this.props.delNote(el.id)}>*/
@@ -71,6 +91,8 @@ class Notes extends Component {
                 })}
                 </div>
             </div>
+            <NoteModel />
+            </React.Fragment>
         );
     }
 }

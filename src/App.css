@@ -24,3 +24,23 @@ body {
 .note {
   margin: 1rem;
 }
+
+.labelWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  height: 1rem;
+  width: 1rem;
+}
+
+.noteModelWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: lightgrey;
+  width: 80vw;
+  margin: 0 auto;
+}
