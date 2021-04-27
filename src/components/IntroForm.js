@@ -25,7 +25,8 @@ handleSubmit=(e, title, body)=>{
         title: title,
         body: body,
         user: this.props.match.params.userId,
-        createdAt: new Date()
+        createdAt: new Date(),
+        labels: []
         
     }
     console.log(note);

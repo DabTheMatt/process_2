@@ -6,7 +6,27 @@ class Notes extends Component {
     state = {
         userNotes: [],
         notes: [],
+        modelOpen: false,
+        elTitle: "",
+        elBody: "",
+        elId: "",
+        elLabels: []
         
+    }
+
+    toggleModel = (el) => {
+        this.setState({
+            modelOpen: !this.state.modelOpen
+        })
+        console.log("modelOpen", this.state.modelOpen);
+        console.log("toggleEl", el.labels);
+        
+        this.setState({
+            elTitle: el.title,
+            elBody: el.body,
+            elId: el.id,
+            elLabels: el.labels
+        })
     }
 
     componentDidMount = () => {
@@ -15,6 +35,8 @@ class Notes extends Component {
         this.getUserNotes(this.props.match.params.userId)
         
       };
+
+      
 
     getUserNotes = async userId => {
         try {
@@ -61,6 +83,38 @@ class Notes extends Component {
 
     }
 
+    updateBody = async (noteId, newBody, labels) => {
+        try {
+          console.log("app upd body", noteId, newBody, labels);
+          const notes = await notesRef.doc(noteId)
+          notes.update({
+            "note.body": newBody,
+            "note.labels": labels
+          })
+          this.setState({
+              userNotes: this.state.userNotes
+          })
+        } catch (error) {
+          console.log("error updating body", error);
+        }
+        
+        
+      }
+
+      updateNotes = async (noteId, newBody) => {
+        
+        try {
+          const notes = await notesRef.doc(noteId)
+          notes.update({
+            "note.body": newBody
+          })
+    
+    
+        } catch (error) {
+          console.log("Error updating title", error);
+        }
+      }
+
     render() {
         return (
             <React.Fragment>
@@ -70,8 +124,11 @@ class Notes extends Component {
                 {this.state.userNotes.map(el=>{
                     return(
                         <div key={el.id} className="note">
-                            <div>{el.id}</div>
+                            <div 
+                            onClick={()=>this.toggleModel(el)}
+                            >{el.id}</div>
                             <input
+                            className="noteTitle"
                             type="text"
                             name="noteTitle"
                             onChange={this.updateTitle}
@@ -91,7 +148,16 @@ class Notes extends Component {
                 })}
                 </div>
             </div>
-            <NoteModel />
+            <NoteModel 
+            toggleModel={(el)=>this.toggleModel(el)}
+            modelOpen={this.state.modelOpen}
+            userNotes={this.state.userNotes}
+            elTitle={this.state.elTitle}
+            elBody={this.state.elBody}
+            elId={this.state.elId}
+            elLabels={this.state.elLabels}
+            updateBody={this.updateBody}
+            />
             </React.Fragment>
         );
     }

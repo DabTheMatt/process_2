@@ -3,6 +3,7 @@ import React from "react";
 import IntroForm from "./components/IntroForm";
 import Notes from "./components/Notes";
 import PageNotFound from "./components/PageNotFound";
+import NoteModel from "./components/NoteModel";
 import { dataRef, notesRef } from "./firebase";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -70,6 +71,8 @@ class App extends React.Component {
     }
   }
 
+
+
   render() {
     return (
       <div>
@@ -93,11 +96,15 @@ class App extends React.Component {
               delNote={this.delNote}
               getNotes={this.getNotes}
               updateNotes={this.updateNotes}
+              updateBody={this.updateBody}
               />
             )}
           />
           <Route component={PageNotFound} />
           </Switch>
+          <NoteModel 
+          
+          />
         </BrowserRouter>
       </div>
     );

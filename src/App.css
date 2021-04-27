@@ -28,19 +28,78 @@ body {
 .labelWrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  height: 25px;
 }
 
 .label {
-  height: 1rem;
-  width: 1rem;
+  height: 20px;
+  width: 30px;
+  margin: 0.5rem;
+  text-align: left;
+  border-radius: 2px;
+  box-shadow: 2px 2px grey;
 }
+
+
 
 .noteModelWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: lightgrey;
-  width: 80vw;
+  background: rgba(38, 70, 83, 0.5);
   margin: 0 auto;
+  position: fixed; 
+  padding-top: 150px; 
+  width: 100vw; 
+  height: 100vh; 
+  left: 0;
+  top: 0;
+}
+
+.noteModelBody {
+  margin: auto;
+	padding: 20px;
+	border-radius: 2px;
+	background-color: #fefefe;
+  border: 1px solid #888;
+  width: 60%;
+}
+
+.noteModelBody form {
+  
+    display: flex;
+    flex-direction: column;
+  
+}
+
+.noteModelCloseBtn {
+	float: right;
+	font-size: 1.5em;
+	color: rgb(230, 86, 86);
+}
+
+.noteEditArea {
+	margin: 10px 0;
+	padding: 2em;
+	font-size: 1em;
+	width: 80%;
+	background: rgba(38, 70, 83, 0.1);
+	border-radius: 5px;
+}
+
+.noteEditAreaInput {
+	margin: 0;
+	padding: 1rem;
+	font-size: 1rem;
+	width: 90%;
+	background: rgb(226, 221, 221);
+  border: none;
+	border-radius: 1px;
+}
+
+.noteTitle {
+  font-size: 1.3rem;
+  outline: none;
+  border: none
 }
