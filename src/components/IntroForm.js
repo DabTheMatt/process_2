@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Notes from "../components/Notes"
 
 class IntroForm extends Component {
     state={
@@ -67,6 +68,7 @@ handleSubmit=(e, title, body)=>{
                     <br/>
                     <button>Create</button>
                 </form>
+                
             </div>
         );
     }

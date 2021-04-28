@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import TextareaAutosize from "react-autosize-textarea"
 
 class NoteModel extends Component {
     state={
@@ -10,19 +11,13 @@ class NoteModel extends Component {
             "#e76f51",
         ],
         selectedLabels: [],
-         elTitle: this.props.elTitle,
+         elTitle: "this.props.elTitle",
          elBody: this.props.elBody,
          elLabels: this.props.elLabels,
          labels: []
     }
 
-componentDidMount=()=>{
-    console.log("elTitle", this.props.elTitle);
-    console.log("clcikedElProps", this.props.clickedEl);
-    console.log("elId in model", this.props.elId);
-    console.log("labels in model", this.props.elLabels);
 
-}
 
 updateBody = (id, body, labels) => {
         console.log("eee", id, body);
@@ -62,6 +57,11 @@ setLabel = label => {
             selectedLabels: labels
         })
     }
+
+}
+
+toggleModel = (e) => {
+    console.log(e);
 }
 
     render() {
@@ -92,12 +92,12 @@ setLabel = label => {
                             <hr />
                             <div className="noteEditArea">
                                 <span className="editIcon">&#x270E;</span>
-                                <input 
+                                <TextareaAutosize
                                 name="body"
                                 id={this.props.elId}
                                 className="noteEditAreaInput"
-                                defaultValue={this.props.elBody}
-                                />
+                                defaultValue={this.state.elBody}
+                                ></TextareaAutosize>
 
                             </div>
                             <div>

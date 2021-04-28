@@ -6,6 +6,8 @@ import PageNotFound from "./components/PageNotFound";
 import NoteModel from "./components/NoteModel";
 import { dataRef, notesRef } from "./firebase";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import  AuthProvider from "./components/AuthContext"
+import AuthConsumer from "./components/AuthContext"
 
 class App extends React.Component {
   state = {
@@ -57,12 +59,13 @@ class App extends React.Component {
     });
   };
 
-  updateNotes = async (noteId, newTitle) => {
+  updateNotes = async (noteId, newTitle, newLabels) => {
     console.log(noteId, newTitle);
     try {
       const notes = await notesRef.doc(noteId)
       notes.update({
-        "note.title": newTitle
+        "note.title": newTitle,
+        "note.labels": newLabels
       })
 
 
@@ -75,18 +78,21 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <AuthConsumer>
+      {({user})=>{
+        <div>
         <BrowserRouter>
-        <Switch>
+          <AuthProvider>
           <Route
             exact
             path="/:userId"
             render={(props) => 
             <IntroForm 
             {...props}
-              createNote={this.createNote} />}
+              createNote={this.createNote} />
+            }
           />
-
+  
           <Route
             path="/:userId/notes"
             render={(props) => (
@@ -100,13 +106,17 @@ class App extends React.Component {
               />
             )}
           />
+          
           <Route component={PageNotFound} />
-          </Switch>
+          
           <NoteModel 
           
           />
+          </AuthProvider>
         </BrowserRouter>
       </div>
+      }}
+      </AuthConsumer>
     );
   }
 }

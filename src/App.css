@@ -23,6 +23,7 @@ body {
 
 .note {
   margin: 1rem;
+  background: blanchedalmond;
 }
 
 .labelWrapper {
@@ -80,26 +81,35 @@ body {
 }
 
 .noteEditArea {
-	margin: 10px 0;
-	padding: 2em;
+	
+	
 	font-size: 1em;
-	width: 80%;
+	width: 100%;
 	background: rgba(38, 70, 83, 0.1);
 	border-radius: 5px;
 }
 
 .noteEditAreaInput {
 	margin: 0;
-	padding: 1rem;
+	
 	font-size: 1rem;
-	width: 90%;
+	width: 95%;
 	background: rgb(226, 221, 221);
   border: none;
 	border-radius: 1px;
 }
 
 .noteTitle {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
+  font-weight: 600;
   outline: none;
-  border: none
+  border: none;
+  margin-bottom: 0.5rem;
+  background: blanchedalmond;
+}
+
+.textareaauto {
+  background: blanchedalmond;
+  outline: none;
+  width: 97%;
 }

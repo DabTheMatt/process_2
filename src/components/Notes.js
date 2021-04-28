@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { notesRef } from '../firebase';
-import NoteModel from "../components/NoteModel"
+import NoteModel from "../components/NoteModel";
+import TextareaAutosize from "react-autosize-textarea";
+import IntroForm from "./IntroForm"
 
 class Notes extends Component {
     state = {
@@ -19,7 +21,7 @@ class Notes extends Component {
             modelOpen: !this.state.modelOpen
         })
         console.log("modelOpen", this.state.modelOpen);
-        console.log("toggleEl", el.labels);
+        console.log("toggleEl", el.body);
         
         this.setState({
             elTitle: el.title,
@@ -36,32 +38,7 @@ class Notes extends Component {
         
       };
 
-      
-
-    getUserNotes = async userId => {
-        try {
-            const userNotes = await notesRef
-            .where("note.user", "==", userId) 
-            .orderBy("note.createdAt")
-            .get()
-            userNotes.forEach(note => {
-                const data = note.data().note
-                    console.log("data", data);
-                const noteOBJ = {
-                    id: note.id,
-                    ...data
-                }
-                this.setState({
-                    userNotes: [...this.state.userNotes, noteOBJ]
-                })
-            });
-        } catch (error) {
-            console.log("Error fetching notes in Notes:", error)
-        }
-        console.log("userNotes", this.state.userNotes);
-    }
-
-    deleteNote = async e => {
+      deleteNote = async e => {
         
         try {
             
@@ -73,12 +50,77 @@ class Notes extends Component {
         }
     }
 
+    getUserNotes = async userId => {
+        try {
+            await notesRef
+            .where("note.user", "==", userId) 
+            .orderBy("note.createdAt")
+            .onSnapshot(snapshot => {
+                snapshot.docChanges()
+                .forEach(change => {
+                    const doc = change.doc
+                    const note = {
+                        id: doc.id,
+                        title: doc.data().note.title,
+                        body: doc.data().note.body,
+                        labels: doc.data().note.labels
+                    }
+                    if(change.type === "added") {
+                        
+                    
+                    this.setState({
+                        userNotes: [...this.state.userNotes, note]
+                    })
+                    }
+                    if (change.type === "removed") {
+                        this.setState({
+                            userNotes: [
+                                ...this.state.userNotes.filter(note => {
+                                    return note.id !== change.doc.id
+                                })
+                            ]
+                        })
+                    }
+                    if(change.type === "modified"){
+                        const index = this.state.userNotes.findIndex(item=>{
+                            return item.id === change.doc.id
+                        })
+                        const notes = [...this.state.userNotes]
+                        notes[index] = note
+                        this.setState({
+                            userNotes: notes
+                        })
+                    }
+                    
+                })
+            })
+            // .get()
+            // userNotes.forEach(note => {
+            //     const data = note.data().note
+            //         console.log("data", data);
+            //     const noteOBJ = {
+            //         id: note.id,
+            //         ...data
+            //     }
+            //     this.setState({
+            //         userNotes: [...this.state.userNotes, noteOBJ]
+            //     })
+            // });
+        } catch (error) {
+            console.log("Error fetching notes in Notes:", error)
+        }
+        console.log("userNotes", this.state.userNotes);
+    }
+
+    
+
     updateTitle = (e) => {
         
         const noteId = e.target.id
         const newTitle = e.target.value
+        const newLabels = e.target.labels
         if(noteId && newTitle) {
-            this.props.updateNotes(noteId, newTitle)
+            this.props.updateNotes(noteId, newTitle, newLabels)
         }
 
     }
@@ -118,15 +160,18 @@ class Notes extends Component {
     render() {
         return (
             <React.Fragment>
+                
             <div>
                 <span>UserId: {this.props.match.params.userId}</span>
+                
                 <div className="notesWrapper">
                 {this.state.userNotes.map(el=>{
                     return(
                         <div key={el.id} className="note">
                             <div 
                             onClick={()=>this.toggleModel(el)}
-                            >{el.id}</div>
+                            >edit</div>
+                            
                             <input
                             className="noteTitle"
                             type="text"
@@ -136,7 +181,28 @@ class Notes extends Component {
                             id={el.id}
                             
                             />
-                            <div>{el.body}</div>
+                            <div className="labelWrapper">
+                                {el.labels.map(label =>{
+                                    return (
+                                    <div 
+                                    key={label}
+                                    className="label"
+                                    style={{background: `${label}`}}
+                                    ></div>
+                                    )
+                                    
+                                })}
+                            </div>
+                            <div >
+                                <TextareaAutosize
+                                className="textareaauto"
+                                readOnly
+                                value={el.body}
+                                >
+                            
+                            </TextareaAutosize>
+                                
+                                </div>
                             <button 
                             /*onClick={()=>this.props.delNote(el.id)}>*/
                             onClick={()=>this.deleteNote(el.id)}>
@@ -148,6 +214,7 @@ class Notes extends Component {
                 })}
                 </div>
             </div>
+            
             <NoteModel 
             toggleModel={(el)=>this.toggleModel(el)}
             modelOpen={this.state.modelOpen}
